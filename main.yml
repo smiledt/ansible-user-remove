@@ -1,0 +1,5 @@
+- name: Remove the user account.
+  hosts: linux
+  become: true
+  roles:
+    - role: user-remove

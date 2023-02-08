@@ -1,0 +1,15 @@
+---
+# tasks file for user-remove
+- name: Remove the user {{ username }} and delete directories associated with {{ username }}
+  user:
+    name: "{{ username }}"
+    state: absent
+    remove: yes
+  when: delete_dir
+
+- name: Remove the user {{ username }} but don't delete directories
+  user:
+    name: "{{ username }}"
+    state: absent
+    remove: no
+  when: not delete_dir

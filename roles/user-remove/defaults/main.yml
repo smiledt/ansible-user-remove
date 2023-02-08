@@ -1,0 +1,4 @@
+---
+# defaults file for user-remove
+username: tempuser
+delete_dir: false
