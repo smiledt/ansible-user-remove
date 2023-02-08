@@ -1,5 +1,10 @@
 ---
 # tasks file for user-remove
+
+# Had issues with tasks running, so kill user's tasks first
+- name: Stop all tasks running under {{ username }} to ensure that {{ username }} can be deleted
+  shell: "killall -KILL -u {{ username }}"
+
 - name: Remove the user {{ username }} and delete directories associated with {{ username }}
   user:
     name: "{{ username }}"
