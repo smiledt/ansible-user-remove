@@ -1,20 +1,27 @@
 ---
 # tasks file for user-remove
 
-# Had issues with tasks running, so kill user's tasks first
-- name: Stop all tasks running under {{ username }} to ensure that {{ username }} can be deleted
-  shell: "killall -KILL -u {{ username }}"
+- name: Ensure that the psmisc package is installed
+  ansible.builtin.package:
+    name: psmisc
 
-- name: Remove the user {{ username }} and delete directories associated with {{ username }}
-  user:
+# Had issues with tasks running, so kill user's tasks first
+- name: Stop all tasks running under the following user to ensure that user can be deleted - {{ username }}
+  ansible.builtin.command: "killall -KILL -u {{ username }}"
+  register: my_output # <- Registers the command output.
+  failed_when: my_output.rc > 1
+  changed_when: my_output.rc == 0 # killall returns a zero return code if at least one process has been killed for each listed command
+
+- name: Remove the following user and delete associated directories - {{ username }}
+  ansible.builtin.user:
     name: "{{ username }}"
     state: absent
-    remove: yes
+    remove: true
   when: delete_dir
 
-- name: Remove the user {{ username }} but don't delete directories
-  user:
+- name: Remove the following user but don't delete directories - {{ username }}
+  ansible.builtin.user:
     name: "{{ username }}"
     state: absent
-    remove: no
+    remove: false
   when: not delete_dir
